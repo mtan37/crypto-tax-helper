@@ -1,5 +1,5 @@
 import unittest
-from renotaxhelper import parser
+from reno_tax_helper import parser
 
 class TestTransactionData(unittest.TestCase):
     
