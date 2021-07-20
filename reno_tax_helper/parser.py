@@ -1,7 +1,7 @@
 import datetime
 import parse
 
-DATE_FORMAT_STR = "{year:d}-{month:d}-{day:d}T{}"
+DATE_FORMAT_STR = "{year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}"
 
 class Transactions:
     
@@ -31,7 +31,10 @@ class Transactions:
                 date = datetime.datetime(
                     date_parsed.named['year'],
                     date_parsed.named['month'],
-                    date_parsed.named['day'] 
+                    date_parsed.named['day'],
+                    hour=date_parsed.named['hour'],
+                    minute=date_parsed.named['minute'],
+                    second=date_parsed.named['second'],
                 )
 
             if date > datetime.datetime.now:
