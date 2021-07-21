@@ -6,6 +6,9 @@ COIN_API_KEY=os.getenv('COIN_API_KEY',"")
 COIN_BASE_URL='https://rest.coinapi.io'
 COIN_EXCHANGE_RATE_URL_FORMAT='/v1/exchangerate/{crypto:}/{quote_currency:}?time={year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}'
 
+class InvalidResponseError(Exception):
+    pass
+
 def call(url, key):
     HEADERS = {
         'X-CoinAPI-Key': key,
@@ -36,7 +39,7 @@ def get_coin_value(crypto, quote_currency, date):
         error = None
    
     if response['asset_id_base'] != crypto or response['asset_id_quote'] != quote_currency:
-        raise Exception("Invalid response")
+        raise InvalidResponseError("Invalid response")
     
     rate = response['rate']
     return rate
