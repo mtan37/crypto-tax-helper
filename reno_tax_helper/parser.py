@@ -20,14 +20,14 @@ class Transactions:
         return asset_info
    
     def validate_crypto_currency(self, crypto):
-        asset_info = validate_currency(crypto)
+        asset_info = self.validate_currency(crypto)
         if not asset_info['type_is_crypto']:
            raise ValueError("Crypto currency symbol is not a crypto") 
         
         return crypto
 
     def validate_quote_currency(self, quote):
-        asset_info = validate_currency(quote)
+        asset_info = self.validate_currency(quote)
         if asset_info['type_is_crypto']:
            raise ValueError("Quote currency symbol is a crypto") 
         
@@ -78,4 +78,21 @@ class Transactions:
         ts = Transaction(date,amount)
         self.ts_list.append(ts)
         self.ts_count+=1
+        ts.quote = amount * get_coin_value(self.crypto_currency, self.quote_currency, date)
 
+def process_file(file_path, crypto_currency, quote_currency, start_index, date_index, amount_index):
+    f = open(file_path, "r")
+    #create a transaction
+    ts = Transactions(crypto_currency, quote_currency)
+    #add each transaction and calculate quote price for each transaction
+    count = 0
+    for l in f:
+        if count < start_index:
+            count += 1
+            continue
+        list = l.split(',')
+        date = list[date_index]
+        amount = list[amount_index]
+        ts.add_transaction(date, amount)
+        
+    return ts
