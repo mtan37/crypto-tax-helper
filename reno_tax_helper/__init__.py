@@ -1,4 +1,4 @@
 __all__ = [
     "parser",
-    "coinmarket_client",
+    "coin_client",
 ]
