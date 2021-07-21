@@ -1,5 +1,6 @@
 import datetime
 import parse
+from coin_client import get_coin_value, get_asset_info
 
 DATE_FORMAT_STR = "{year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}"
 
@@ -11,7 +12,10 @@ class Transactions:
         """
         if not currency:
            raise ValueError("Currency symbol can't be empty") 
-        #TODO use coinmarket api
+        
+        if not get_asset_info:
+           raise ValueError("Currency symbol doesn't exist") 
+ 
         return currency
     
     def __init__(self, currency=None):
@@ -52,7 +56,8 @@ class Transactions:
         def __init__(self, date=None, amount=0):
             self.date=self.validate_date(date)
             self.amount=self.validate_amount(amount)
-    
+            self.quote=None   
+ 
     def add_transaction(self, date, amount):
         ts = Transaction(date,amount)
         self.ts_list.append(ts)
