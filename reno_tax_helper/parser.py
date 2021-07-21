@@ -8,18 +8,34 @@ class Transactions:
     
     def validate_currency(self, currency):
         """
-            validate that the currency is available in coinmarket cap
+            validate that the crypto currency is available in coinmarket cap
         """
         if not currency:
            raise ValueError("Currency symbol can't be empty") 
         
-        if not get_asset_info:
+        asset_info = get_asset_info
+        if not asset_info:
            raise ValueError("Currency symbol doesn't exist") 
  
-        return currency
-    
-    def __init__(self, currency=None):
-        self.currency=self.validate_currency(currency)
+        return asset_info
+   
+    def validate_crypto_currency(self, crypto):
+        asset_info = validate_currency(crypto)
+        if not asset_info['type_is_crypto']:
+           raise ValueError("Crypto currency symbol is not a crypto") 
+        
+        return crypto
+
+    def validate_quote_currency(self, quote):
+        asset_info = validate_currency(quote)
+        if asset_info['type_is_crypto']:
+           raise ValueError("Quote currency symbol is a crypto") 
+        
+        return quote
+ 
+    def __init__(self, crypto_currency=None, quote_currency=None):
+        self.crypto_currency = self.validate_crypto_currency(crypto_currency)
+        self.quote_currency = self.validate_quote_currency(quote_currency)
         self.ts_list=[]
         self.ts_count=0
 
@@ -62,3 +78,4 @@ class Transactions:
         ts = Transaction(date,amount)
         self.ts_list.append(ts)
         self.ts_count+=1
+

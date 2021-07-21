@@ -51,5 +51,10 @@ def get_asset_info(crypto):
             crypto=crypto,
         )
     response = call(url, COIN_API_KEY)
+
+    if response:
+        response=json.loads(response)
    
     return response
+
+print(get_asset_info('usd'))
