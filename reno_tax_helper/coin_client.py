@@ -1,7 +1,6 @@
 import requests
 import json
 import os
-import datetime
 
 COIN_API_KEY=os.getenv('COIN_API_KEY',"")
 COIN_BASE_URL='https://rest.coinapi.io'
@@ -13,7 +12,6 @@ def call(url, key):
     }
     response = requests.get(url, headers=HEADERS)
     data = json.loads(response.text)
-    print(data)
     return data
 
 def get_coin_value(crypto, quote_currency, date):
@@ -26,8 +24,19 @@ def get_coin_value(crypto, quote_currency, date):
             day=date.day,
             hour=date.hour,
             minute=date.minute,
-            second=date.second,
-        )
-    return call(url,COIN_API_KEY)
-
-get_coin_value('RVN', 'USD', datetime.datetime(2021, 7, 19)) 
+            second=30,
+        )#Current the api call does not consider seconds, and rounds down the minute when second==0
+    response = call(url,COIN_API_KEY)
+    
+    try:
+        error = response['error']
+        print(error)
+        return None 
+    except KeyError:
+        error = None
+   
+    if response['asset_id_base'] != crypto or response['asset_id_quote'] != quote_currency:
+        raise Exception("Invalid response")
+    
+    rate = response['rate']
+    return rate
