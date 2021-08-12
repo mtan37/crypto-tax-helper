@@ -13,7 +13,7 @@ class Transactions:
         if not currency:
            raise ValueError("Currency symbol can't be empty") 
         
-        asset_info = get_asset_info
+        asset_info = get_asset_info(currency)
         if not asset_info:
            raise ValueError("Currency symbol doesn't exist") 
  
