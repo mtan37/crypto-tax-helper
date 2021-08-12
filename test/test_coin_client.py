@@ -12,27 +12,29 @@ class TestApiCall(unittest.TestCase):
     @classmethod
     def tearDownClass(self):
         pass
+   
+    @patch('reno_tax_helper.coin_client.call') 
+    def test_get_coin_value_success(self, mocked_call):
+        mocked_call.return_value = self.r1
+        mocked_call.assert_called_once() 
+        self.assertEqual(
+            get_coin_value('RVN', 'USD', datetime(2021,2,1,hour=23, minute=30)),
+            0.0502182830088944
+        )
     
-    def test_get_coin_value_success(self):
-        with patch('reno_tax_helper.coin_client.call') as mocked_call:
-            mocked_call.return_value = self.r1
-            
-            self.assertEqual(
-                get_coin_value('RVN', 'USD', datetime(2021,2,1,hour=23, minute=30)),
-                0.0502182830088944
-            )
-    
-    def test_get_coin_value_fail_mismatch_crypto(self):
-        with patch('reno_tax_helper.coin_client.call') as mocked_call:
-            mocked_call.return_value = self.r1
-            
-            with self.assertRaises(InvalidResponseError):
-                get_coin_value('AAA', 'USD', datetime(2021,2,1,hour=23, minute=30))
+    @patch('reno_tax_helper.coin_client.call') 
+    def test_get_coin_value_fail_mismatch_crypto(self, mocked_call):
+        mocked_call.return_value = self.r1
+        mocked_call.assert_called_once() 
         
-    def test_get_coin_value_fail_mismatch_quote(self):
-        with patch('reno_tax_helper.coin_client.call') as mocked_call:
-            mocked_call.return_value = self.r1
-            
-            with self.assertRaises(InvalidResponseError):
-                get_coin_value('RVN', 'AAA', datetime(2021,2,1,hour=23, minute=30))
+        with self.assertRaises(InvalidResponseError):
+            get_coin_value('AAA', 'USD', datetime(2021,2,1,hour=23, minute=30))
+    
+    @patch('reno_tax_helper.coin_client.call') 
+    def test_get_coin_value_fail_mismatch_quote(self, mocked_call):
+        mocked_call.return_value = self.r1
+        mocked_call.assert_called_once() 
+        
+        with self.assertRaises(InvalidResponseError):
+            get_coin_value('RVN', 'AAA', datetime(2021,2,1,hour=23, minute=30))
         
