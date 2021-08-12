@@ -18,16 +18,19 @@ def call(url, key):
     data = json.loads(response.text)
     return data
 
-def get_coin_value(crypto, quote_currency, date):
+def get_coin_value(crypto, quote_currency, time):
+    """
+    get the value of a coin at certain tiem
+    """
     url = COIN_BASE_URL + \
         COIN_EXCHANGE_RATE_URL_FORMAT.format(
             crypto=crypto,
             quote_currency=quote_currency,
-            year=date.year,
-            month=date.month,
-            day=date.day,
-            hour=date.hour,
-            minute=date.minute,
+            year=time.year,
+            month=time.month,
+            day=time.day,
+            hour=time.hour,
+            minute=time.minute,
             second=30,
         )#Current the api call does not consider seconds, and rounds down the minute when second==0
     response = call(url, COIN_API_KEY)
@@ -46,6 +49,10 @@ def get_coin_value(crypto, quote_currency, date):
     return rate
 
 def get_asset_info(crypto):
+    """
+    get the info of a currency in dict format
+    return None if the currency doesn't exist
+    """
     url = COIN_BASE_URL + \
         COIN_ASSET_SYMBOL_URL_FORMAT.format(
             crypto=crypto,
@@ -53,8 +60,7 @@ def get_asset_info(crypto):
     response = call(url, COIN_API_KEY)
 
     if response:
-        response=json.loads(response)
+        response_list = json.dumps(response)
+        return response_list
    
-    return response
-
-print(get_asset_info('usd'))
+    return None
