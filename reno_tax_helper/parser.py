@@ -1,6 +1,6 @@
 import datetime
 import parse
-from coin_client import get_coin_value, get_asset_info
+from reno_tax_helper.coin_client import get_coin_value, get_asset_info
 
 DATE_FORMAT_STR = "{year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}"
 
@@ -20,15 +20,21 @@ class Transactions:
         return asset_info
    
     def validate_crypto_currency(self, crypto):
+        if not crypto:
+           raise ValueError("Crypto currency symbol can't be empty") 
+        
         asset_info = self.validate_currency(crypto)
-        if not asset_info['type_is_crypto']:
+        if not asset_info or not asset_info['type_is_crypto']:
            raise ValueError("Crypto currency symbol is not a crypto") 
         
         return crypto
 
     def validate_quote_currency(self, quote):
+        if not quote:
+           raise ValueError("Quote currency symbol can't be empty") 
+        
         asset_info = self.validate_currency(quote)
-        if asset_info['type_is_crypto']:
+        if not asset_info or asset_info['type_is_crypto']:
            raise ValueError("Quote currency symbol is a crypto") 
         
         return quote
