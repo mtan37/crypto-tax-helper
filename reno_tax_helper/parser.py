@@ -2,7 +2,7 @@ import datetime
 from parse import *
 from reno_tax_helper.coin_client import get_coin_value, get_asset_info
 
-DATE_FORMAT_STR = "{year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}"
+DATE_FORMAT_STR = "{}{year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}{}"
 
 class Transactions:
     
@@ -50,10 +50,12 @@ class Transactions:
         def validate_date(self, date):
             if date is None:
                 raise ValueError("date value can't be None")
-            
+ 
             if not isinstance(date, datetime.date):
                 # check if date has a valid format("2021-06-30T23:09:08")
-                date_parsed = parse(DATE_FORMAT_STR,date)
+                date_parsed = parse(DATE_FORMAT_STR, date)
+                if date_parsed is None:
+                    raise ValueError("date parse error")
                 date = datetime.datetime(
                     date_parsed.named['year'],
                     date_parsed.named['month'],
@@ -96,9 +98,10 @@ def process_file(file_path, crypto_currency, quote_currency, start_index, date_i
         if count < start_index:
             count += 1
             continue
-        list = l.split(',')
-        date = list[date_index]
-        amount = list[amount_index]
+        
+        list_l = l.split(',')
+        date = list_l[date_index].strip('\"')
+        amount = list_l[amount_index].strip('\"')
         ts.add_transaction(date, amount)
         
     return ts
