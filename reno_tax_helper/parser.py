@@ -1,5 +1,5 @@
 import datetime
-import parse
+from parse import *
 from reno_tax_helper.coin_client import get_coin_value, get_asset_info
 
 DATE_FORMAT_STR = "{year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}"
@@ -63,7 +63,7 @@ class Transactions:
                     second=date_parsed.named['second'],
                 )
 
-            if date > datetime.datetime.now:
+            if date > datetime.datetime.now():
                 # check if is future date
                 raise ValueError("Can't have future dated transaction") 
             
@@ -81,10 +81,10 @@ class Transactions:
             self.quote=None   
  
     def add_transaction(self, date, amount):
-        ts = Transaction(date,amount)
+        ts = self.Transaction(date,amount)
         self.ts_list.append(ts)
         self.ts_count+=1
-        ts.quote = amount * get_coin_value(self.crypto_currency, self.quote_currency, date)
+        ts.quote = ts.amount * get_coin_value(self.crypto_currency, self.quote_currency, ts.date)
 
 def process_file(file_path, crypto_currency, quote_currency, start_index, date_index, amount_index):
     f = open(file_path, "r")
