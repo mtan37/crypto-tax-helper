@@ -16,25 +16,27 @@ class TestApiCall(unittest.TestCase):
     @patch('reno_tax_helper.coin_client.call') 
     def test_get_coin_value_success(self, mocked_call):
         mocked_call.return_value = self.r1
-        mocked_call.assert_called_once() 
         self.assertEqual(
             get_coin_value('RVN', 'USD', datetime(2021,2,1,hour=23, minute=30)),
             0.0502182830088944
         )
+        mocked_call.assert_called_once() 
     
     @patch('reno_tax_helper.coin_client.call') 
     def test_get_coin_value_fail_mismatch_crypto(self, mocked_call):
         mocked_call.return_value = self.r1
-        mocked_call.assert_called_once() 
         
         with self.assertRaises(InvalidResponseError):
             get_coin_value('AAA', 'USD', datetime(2021,2,1,hour=23, minute=30))
+        
+        mocked_call.assert_called_once() 
     
     @patch('reno_tax_helper.coin_client.call') 
     def test_get_coin_value_fail_mismatch_quote(self, mocked_call):
         mocked_call.return_value = self.r1
-        mocked_call.assert_called_once() 
         
         with self.assertRaises(InvalidResponseError):
             get_coin_value('RVN', 'AAA', datetime(2021,2,1,hour=23, minute=30))
+        
+        mocked_call.assert_called_once() 
         
