@@ -94,6 +94,7 @@ def process_file(file_path, crypto_currency, quote_currency, start_index, date_i
     ts = Transactions(crypto_currency, quote_currency)
     #add each transaction and calculate quote price for each transaction
     count = 0
+    
     for l in f:
         if count < start_index:
             count += 1
@@ -103,5 +104,6 @@ def process_file(file_path, crypto_currency, quote_currency, start_index, date_i
         date = list_l[date_index].strip('\"')
         amount = list_l[amount_index].strip('\"')
         ts.add_transaction(date, amount)
-        
+    
+    f.close()    
     return ts
