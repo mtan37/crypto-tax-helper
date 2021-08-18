@@ -33,6 +33,7 @@ def get_coin_value(crypto, quote_currency, time):
             minute=time.minute,
             second=30,
         )#Current the api call does not consider seconds, and rounds down the minute when second==0
+    print(url)
     response = call(url, COIN_API_KEY)
     
     try:
@@ -59,8 +60,14 @@ def get_asset_info(crypto):
         )
     response = call(url, COIN_API_KEY)
 
+    try:
+        error = response['error']
+        print(error)
+        return None 
+    except KeyError:
+        error = None
+
     if response:
-        response_list = json.dumps(response)
-        return response_list
+        return response[0]
    
     return None

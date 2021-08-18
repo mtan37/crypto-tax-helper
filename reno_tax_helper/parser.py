@@ -2,7 +2,7 @@ import datetime
 from parse import *
 from reno_tax_helper.coin_client import get_coin_value, get_asset_info
 
-DATE_FORMAT_STR = "{}{year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}{}"
+DATE_FORMAT_STR = "{year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}{}"
 
 class Transactions:
     
@@ -15,7 +15,7 @@ class Transactions:
         
         asset_info = get_asset_info(currency)
         if not asset_info:
-           raise ValueError("Currency symbol doesn't exist") 
+           raise ValueError("Error getting asset info about currency ", currency) 
  
         return asset_info
    
@@ -86,7 +86,10 @@ class Transactions:
         ts = self.Transaction(date,amount)
         self.ts_list.append(ts)
         self.ts_count+=1
-        ts.quote = ts.amount * get_coin_value(self.crypto_currency, self.quote_currency, ts.date)
+        value = get_coin_value(self.crypto_currency, self.quote_currency, ts.date)
+        if value is None:
+            raise Exception("Error getting coin value")
+        ts.quote = ts.amount * value
 
 def process_file(file_path, crypto_currency, quote_currency, start_index, date_index, amount_index):
     f = open(file_path, "r")
