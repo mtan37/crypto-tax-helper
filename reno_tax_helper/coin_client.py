@@ -30,7 +30,6 @@ def get_coin_value(crypto, quote_currency, time):
             month=time.month,
             day=time.day,
         )#Current the api call does not consider seconds, and rounds down the minute when second==0
-    print(url)
     response = call(url, COIN_API_KEY)
     
     try:

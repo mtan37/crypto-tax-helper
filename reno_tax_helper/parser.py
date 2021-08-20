@@ -106,7 +106,11 @@ def process_file(file_path, crypto_currency, quote_currency, start_index, date_i
         list_l = l.split(',')
         date = list_l[date_index].strip('\"')
         amount = list_l[amount_index].strip('\"')
-        ts.add_transaction(date, amount)
-    
+        try:
+            ts.add_transaction(date, amount)
+        except ValueError as e:
+            print(e)
+            continue
+  
     f.close()    
     return ts
