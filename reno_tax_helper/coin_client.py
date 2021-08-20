@@ -4,7 +4,7 @@ import os
 
 COIN_API_KEY=os.getenv('COIN_API_KEY',"")
 COIN_BASE_URL='https://rest.coinapi.io'
-COIN_EXCHANGE_RATE_URL_FORMAT='/v1/exchangerate/{crypto:}/{quote_currency:}?time={year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}'
+COIN_EXCHANGE_RATE_URL_FORMAT='/v1/exchangerate/{crypto:}/{quote_currency:}?time={year:04d}-{month:02d}-{day:02d}'
 COIN_ASSET_SYMBOL_URL_FORMAT='/v1/assets/{crypto}'
 
 class InvalidResponseError(Exception):
@@ -29,9 +29,6 @@ def get_coin_value(crypto, quote_currency, time):
             year=time.year,
             month=time.month,
             day=time.day,
-            hour=time.hour,
-            minute=time.minute,
-            second=30,
         )#Current the api call does not consider seconds, and rounds down the minute when second==0
     print(url)
     response = call(url, COIN_API_KEY)
