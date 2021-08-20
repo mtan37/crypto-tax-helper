@@ -61,7 +61,7 @@ def get_asset_info(crypto):
     response = call(url, COIN_API_KEY)
 
     try:
-        error = response['error']
+        error = response[0]['error']
         print(error)
         return None 
     except KeyError:
