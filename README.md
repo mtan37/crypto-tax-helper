@@ -1,5 +1,5 @@
 # crypto-tax-helper
-
+A small project for personal use... Right now it parses raven core transaction data, and estimates the income you earns in minging(for tax purposes)
 ## Command Line Usage
 run `python run.py -h` for more detail
 
