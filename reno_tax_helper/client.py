@@ -19,10 +19,9 @@ def get_typical_prices(start_date: datetime, end_date: datetime):
     diff_days = (end_date - start_date).days
 
     # Get klines of RVNUSDT at 1d interval
-    results = client.klines(symbol="RVNUSDT", interval="1d", startTime=start_date_epoch, limit=diff_days)
+    results = client.klines(symbol="RVNUSDT", interval="1d", startTime=start_date_epoch, limit=diff_days + 1)
     if int(results[0][0]) != start_date_epoch:
         raise ValueError(f"can't find data for start date of {start_date}") 
-    print(results)
     prices = {}
     for result in results:
         high = float(result[2])
@@ -30,12 +29,7 @@ def get_typical_prices(start_date: datetime, end_date: datetime):
         close = float(result[4])
         typical_price = (high + low + close)/3
 
-        open_time = datetime.fromtimestamp(result[0], tz) # this should be in 12:00am for the particular date
-        open_time.hour = 0
-        open_time.minute = 0
-        open_time.second = 0
-        open_time.microsecond = 0
-
+        open_time = datetime.fromtimestamp(result[0]/1000, tz) # this should be in 12:00am for the particular date
         prices[open_time] = typical_price
 
     return prices

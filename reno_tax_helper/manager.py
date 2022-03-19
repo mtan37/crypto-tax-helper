@@ -21,7 +21,7 @@ class PriceList:
     def get_price(self, date: datetime):
         # only take the date info from the input. Always use utc timezone
         tmp_date = datetime(date.year, date.month, date.day, tzinfo=timezone.utc)
-        return self.prices[int(tmp_date.timestamp()) * 1000]
+        return self.prices[tmp_date]
 
 class TransactionManager:
 
@@ -32,6 +32,18 @@ class TransactionManager:
         for transaction in self.transaction_list:
             transaction.fiat_amount = \
                 self.price_list.get_price(transaction.date) * transaction.amount
+
+    def getTotalAmount(self):
+        amount = 0
+        for transaction in self.transaction_list:
+            amount += transaction.amount
+        return amount
+
+    def getTotalFiatAmount(self):
+        amount = 0
+        for transaction in self.transaction_list:
+            amount += transaction.fiat_amount
+        return amount
 
     def outputAssetSheet(ts=None):
         pass 
