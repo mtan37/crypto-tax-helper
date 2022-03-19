@@ -28,7 +28,10 @@ class TransactionManager:
     def __init__(self, file_path: str, start_row_index: int, date_index: int, amount_index: int):
         self.transaction_list, start_date, end_date = process_file(file_path, start_row_index, date_index, amount_index)
         self.price_list = PriceList(start_date, end_date)
-        # TODO populate the fiat amount for transaction list
+        # populate the fiat amount for transaction list
+        for transaction in self.transaction_list:
+            transaction.fiat_amount = \
+                self.price_list.get_price(transaction.date) * transaction.amount
 
     def outputAssetSheet(ts=None):
         pass 

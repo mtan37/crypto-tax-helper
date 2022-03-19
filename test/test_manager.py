@@ -1,4 +1,4 @@
-from reno_tax_helper.manager import PriceList
+from reno_tax_helper.manager import PriceList, TransactionManager
 from unittest.mock import patch
 from datetime import datetime, timezone
 
@@ -25,3 +25,16 @@ class TestManager:
         assert price_list.get_price(test_time1) == 3
         assert price_list.get_price(test_time2) == 4
         assert price_list.get_price(test_time3) == 1
+
+    @patch("reno_tax_helper.manager.get_typical_prices")
+    def test_populate_fiat_amount(self, get_typical_prices):
+        time1 = int(datetime(2021, 6, 29, tzinfo=timezone.utc).timestamp()) * 1000
+        time2 = int(datetime(2021, 6, 30, tzinfo=timezone.utc).timestamp()) * 1000
+        get_typical_prices.return_value = {
+            time1: 2,
+            time2: 3,
+        }
+
+        test_file_path='test/resource/test_parser.csv'
+        manager = TransactionManager(test_file_path, 1, 1, 5)
+        assert manager.transaction_list[0].fiat_amount == 18

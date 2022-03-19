@@ -14,7 +14,7 @@ class TestParser:
 
         assert start_date.year == 2021
         assert start_date.month == 6
-        assert start_date.day == 15
+        assert start_date.day == 29
         assert start_date.hour == 12
         assert start_date.minute == 31
         assert start_date.second == 45

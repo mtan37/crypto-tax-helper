@@ -32,7 +32,6 @@ class Transaction:
                 second=date_parsed.named['second'],
                 tzinfo=timezone.utc
             )
-        print(f"the second for pased time is {date.second}")
 
         if date > datetime.now(tz=timezone.utc):
             # check if is future date
