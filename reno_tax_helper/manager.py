@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from reno_tax_helper.parser import process_file
-from client import get_typical_prices
+from reno_tax_helper.client import get_typical_prices
 """
 Store a list of ravencoin in one usd at a certain date
 Value is calculated using the typical price over a day

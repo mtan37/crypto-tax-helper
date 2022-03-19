@@ -1,29 +1,27 @@
-import unittest
-from unittest.mock import patch, call, Mock
-import reno_tax_helper.manager as m
-class TestCalculation(unittest.TestCase):
-    
-    @classmethod
-    def setUpClass(self):
-        self.ts = Mock()
-        self.ts.ts_list=[]
-        
-        amount = 1
-        quote = 2
-        while amount < 7:
-            t = Mock()
-            t.amount = amount
-            t.quote = quote
-            self.ts.ts_list.append(t)   
-            amount += 1 
-            quote +=2   
- 
-    @classmethod
-    def tearDownClass(self):
-        pass
+from reno_tax_helper.manager import PriceList
+from unittest.mock import patch
+from datetime import datetime, timezone
 
-    def test_calculate_total_quote(self):
-        assert m.calculateTotalQuoteAmount(self.ts) == 42
+# content of test_class_demo.py
+class TestManager:
 
-    def test_calculate_total_amount(self):
-        assert m.calculateTotalAmount(self.ts) == 21
+    @patch("reno_tax_helper.manager.get_typical_prices")
+    def test_get_prices(self, get_typical_prices):
+        start_date = datetime(2001, 1, 3, tzinfo=timezone.utc)
+        end_date = datetime(2001, 1, 5, tzinfo=timezone.utc)
+        time1 = int(datetime(2001, 1, 3, tzinfo=timezone.utc).timestamp()) * 1000
+        time2 = int(datetime(2001, 1, 4, tzinfo=timezone.utc).timestamp()) * 1000
+        time3 = int(datetime(2001, 1, 5, tzinfo=timezone.utc).timestamp()) * 1000
+        get_typical_prices.return_value = {
+            time1: 3,
+            time2: 4,
+            time3: 1,
+        }
+        price_list = PriceList(start_date, end_date)
+
+        test_time1 = datetime(2001, 1, 3, 1, 2, 22, tzinfo=timezone.utc)
+        test_time2 = datetime(2001, 1, 4, 1, 2, 22, tzinfo=timezone.utc)
+        test_time3 = datetime(2001, 1, 5, 1, 2, 22, tzinfo=timezone.utc)
+        assert price_list.get_price(test_time1) == 3
+        assert price_list.get_price(test_time2) == 4
+        assert price_list.get_price(test_time3) == 1

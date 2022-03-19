@@ -1,7 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from parse import *
 
-DATE_FORMAT_STR = "{year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}{}"
+DATE_FORMAT_STR = "{year:04d}-{month:02d}-{day:02d}T{hour:02d}:{minute:02d}:{second:02d}"
 
 """
 Only support RVN and USDT
@@ -30,9 +30,11 @@ class Transaction:
                 hour=date_parsed.named['hour'],
                 minute=date_parsed.named['minute'],
                 second=date_parsed.named['second'],
+                tzinfo=timezone.utc
             )
+        print(f"the second for pased time is {date.second}")
 
-        if date > datetime.now():
+        if date > datetime.now(tz=timezone.utc):
             # check if is future date
             raise ValueError("Can't have future dated transaction") 
         
